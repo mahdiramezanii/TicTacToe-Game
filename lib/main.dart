@@ -12,6 +12,11 @@ class Application extends StatefulWidget {
 class _ApplicationState extends State<Application> {
   bool isturnO = true;
   List<String> trunOorTrunX = ["", "", "", "", "", "", "", "", ""];
+  bool hasResult = false;
+  int scoreX = 0;
+  int scoreO = 0;
+  int fillBox = 0;
+  String WinnerTitle = "";
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -25,10 +30,11 @@ class _ApplicationState extends State<Application> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: [
-                  _get_score_and_name_palyer("Player X", "2"),
-                  _get_score_and_name_palyer("Player O", "2"),
+                  _get_score_and_name_palyer("Player X", "$scoreX"),
+                  _get_score_and_name_palyer("Player O", "$scoreO"),
                 ],
               ),
+              showBottom(),
               SizedBox(
                 height: 30,
               ),
@@ -84,6 +90,29 @@ class _ApplicationState extends State<Application> {
     );
   }
 
+  Widget showBottom() {
+    return Visibility(
+      visible: hasResult,
+      child: OutlinedButton(
+        style: OutlinedButton.styleFrom(
+            side: BorderSide(color: Colors.white, width: 1)),
+        onPressed: () {
+          setState(() {
+            _resetGame();
+            hasResult = false;
+          });
+        },
+        child: Text(
+          "$WinnerTitle",
+          style: TextStyle(
+            color: Colors.white,
+            fontSize: 20,
+          ),
+        ),
+      ),
+    );
+  }
+
   void _resetGame() {
     setState(() {
       for (var i = 0; i < trunOorTrunX.length; i++) {
@@ -91,21 +120,121 @@ class _ApplicationState extends State<Application> {
           trunOorTrunX[i] = "";
         }
       }
+      fillBox = 0;
     });
   }
 
   void getOnTap(int index) {
     setState(() {
+      if (hasResult) {
+        return;
+      }
       if (isturnO && trunOorTrunX[index] == "") {
         trunOorTrunX[index] = "X";
         isturnO = !isturnO;
+        fillBox = fillBox + 1;
       } else {
         if (trunOorTrunX[index] == "") {
           trunOorTrunX[index] = "O";
           isturnO = !isturnO;
+          fillBox = fillBox + 1;
         }
       }
+      getScore();
     });
+  }
+
+  void setResult(String winner, String title) {
+    setState(() {
+      hasResult = true;
+      WinnerTitle = title;
+
+      if (winner == "X") {
+        scoreX = scoreX + 1;
+      } else if (winner == "O") {
+        scoreO = scoreO + 1;
+      } else {
+        scoreO = scoreO + 1;
+        scoreX = scoreX + 1;
+      }
+    });
+  }
+
+  void getScore() {
+    // ===================== Check First Row ==============================
+    if (trunOorTrunX[0] == trunOorTrunX[1] &&
+        trunOorTrunX[1] == trunOorTrunX[2] &&
+        trunOorTrunX != "") {
+      setResult(trunOorTrunX[0], "player ${trunOorTrunX[0]} baramdeh");
+      return;
+    }
+    //==============================================================================
+
+    // ===================== Check Two Row ==============================
+    if (trunOorTrunX[3] == trunOorTrunX[4] &&
+        trunOorTrunX[4] == trunOorTrunX[5] &&
+        trunOorTrunX[3] != "") {
+      setResult(trunOorTrunX[3], "player ${trunOorTrunX[3]} baramdeh");
+      return;
+    }
+    //=======================================================================
+
+    // ===================== Check tree Row ==============================
+    if (trunOorTrunX[6] == trunOorTrunX[7] &&
+        trunOorTrunX[7] == trunOorTrunX[8] &&
+        trunOorTrunX[6] != "") {
+      setResult(trunOorTrunX[6], "player ${trunOorTrunX[6]} baramdeh");
+      return;
+    }
+    //=========================================================================
+
+    //========================================= Check First Column ====================================
+    if (trunOorTrunX[0] == trunOorTrunX[3] &&
+        trunOorTrunX[3] == trunOorTrunX[6] &&
+        trunOorTrunX[0] != "") {
+      setResult(trunOorTrunX[0], "player ${trunOorTrunX[0]} baramdeh");
+      return;
+    }
+    //======================================================================================
+
+    //========================================= Check Two Column ====================================
+    if (trunOorTrunX[1] == trunOorTrunX[4] &&
+        trunOorTrunX[4] == trunOorTrunX[7] &&
+        trunOorTrunX[1] != "") {
+      setResult(trunOorTrunX[1], "player ${trunOorTrunX[1]} baramdeh");
+      return;
+    }
+
+    //=============================================================================================
+
+    //========================================= Check thre Column ====================================
+    if (trunOorTrunX[2] == trunOorTrunX[5] &&
+        trunOorTrunX[5] == trunOorTrunX[8] &&
+        trunOorTrunX[2] != "") {
+      setResult(trunOorTrunX[2], "player ${trunOorTrunX[2]} baramdeh");
+      return;
+    }
+    //===================================================================================
+
+    if (trunOorTrunX[0] == trunOorTrunX[4] &&
+        trunOorTrunX[4] == trunOorTrunX[8] &&
+        trunOorTrunX[0] != "") {
+      setResult(trunOorTrunX[0], "player ${trunOorTrunX[0]} baramdeh");
+      return;
+
+      //===================================================
+    }
+
+    if (trunOorTrunX[2] == trunOorTrunX[4] &&
+        trunOorTrunX[4] == trunOorTrunX[6] &&
+        trunOorTrunX[2] != "") {
+      setResult(trunOorTrunX[2], "player ${trunOorTrunX[2]} baramdeh");
+      return;
+    }
+
+    if (fillBox == 9) {
+      setResult(trunOorTrunX[2], "player ${trunOorTrunX[2]} baramdeh");
+    }
   }
 
   Widget _get_score_and_name_palyer(String player, String score) {
@@ -146,6 +275,9 @@ class _ApplicationState extends State<Application> {
           IconButton(
             onPressed: () {
               _resetGame();
+              scoreO = 0;
+              scoreX = 0;
+              hasResult = false;
             },
             icon: Icon(
               Icons.refresh,
