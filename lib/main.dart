@@ -164,7 +164,7 @@ class _ApplicationState extends State<Application> {
     // ===================== Check First Row ==============================
     if (trunOorTrunX[0] == trunOorTrunX[1] &&
         trunOorTrunX[1] == trunOorTrunX[2] &&
-        trunOorTrunX != "") {
+        trunOorTrunX[0] != "") {
       setResult(trunOorTrunX[0], "player ${trunOorTrunX[0]} baramdeh");
       return;
     }
@@ -233,7 +233,7 @@ class _ApplicationState extends State<Application> {
     }
 
     if (fillBox == 9) {
-      setResult(trunOorTrunX[2], "player ${trunOorTrunX[2]} baramdeh");
+      setResult("", "mosavi");
     }
   }
 
